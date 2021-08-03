@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -38,7 +39,10 @@ namespace ResolvePay_WebAPI
         {
 
             services.AddControllers();
-            services.Configure<ConnectionStringsConfig>(Configuration.GetSection("ConnectionStrings"));
+           // services.Configure<ConnectionStringsConfig>(Configuration.GetSection("ConnectionStrings"));
+
+            services.AddDbContext<DBContextPGSQL>(options =>
+           options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))); 
 
             var jwtTokenConfig = Configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>();
             services.AddSingleton(jwtTokenConfig);
@@ -105,9 +109,7 @@ namespace ResolvePay_WebAPI
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ResolvePay_WebAPI v1"));
-            }
-*/
-
+            }*/
 
             if (env.IsDevelopment())
             {
